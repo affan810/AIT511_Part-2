@@ -7,7 +7,7 @@ This project applies multiple models, compares their performance, and identifies
 
 ---
 
-## 📘 **Project Overview**
+## **Project Overview**
 
 Forests are influenced by elevation, soil composition, hydrology, sunlight, and terrain characteristics.
 This project uses the **UCI Forest CoverType dataset** to classify land areas into one of **7 forest cover types**.
@@ -22,7 +22,7 @@ The aim is to:
 
 ---
 
-## 📦 **Dataset Information**
+## **Dataset Information**
 
 **Source:** UCI Machine Learning Repository
 **Samples:** 581,012
@@ -36,7 +36,7 @@ Represents tree species such as Spruce/Fir, Aspen, Douglas-fir, etc.
 
 ---
 
-## 🧹 **Preprocessing Steps**
+## **Preprocessing Steps**
 
 * Exploratory Data Analysis (EDA)
 * Created engineered feature: **Hydro_Euclidean distance**
@@ -46,7 +46,7 @@ Represents tree species such as Spruce/Fir, Aspen, Douglas-fir, etc.
 
 ---
 
-## 🔎 **Exploratory Data Analysis (EDA)**
+## **Exploratory Data Analysis (EDA)**
 
 Key plots generated:
 
@@ -59,7 +59,7 @@ These visualizations helped understand data shape, class balance, and relationsh
 
 ---
 
-## 🤖 **Models Implemented**
+## **Models Implemented**
 
 ### **Baseline Models**
 
@@ -79,7 +79,7 @@ These visualizations helped understand data shape, class balance, and relationsh
 
 ---
 
-## 📊 **Results Summary**
+## **Results Summary**
 
 | Model                        | Accuracy   |
 | ---------------------------- | ---------- |
@@ -94,11 +94,11 @@ These visualizations helped understand data shape, class balance, and relationsh
 | Linear SVM                   | 71.14%     |
 
 **Best Model:**
-✔ **Random Forest (tuned)** – highest accuracy, stable behavior, and interpretable feature relationships.
+ **Random Forest (tuned)** – highest accuracy, stable behavior, and interpretable feature relationships.
 
 ---
 
-## 🔬 **Why Random Forest Performed Best**
+## **Why Random Forest Performed Best**
 
 * Handles **non-linear feature interactions**
 * Works well with **mixed numerical + categorical (one-hot) features**
@@ -109,7 +109,7 @@ Neural Networks performed very well after tuning but required more compute and c
 
 ---
 
-## 🖼️ **Important Visualizations**
+## **Important Visualizations**
 
 ![](target_distribution.png)
 *Distribution of Forest Cover Types*
@@ -128,7 +128,7 @@ Neural Networks performed very well after tuning but required more compute and c
 
 ---
 
-## 🏗️ **Project Structure**
+## **Project Structure**
 
 ```
 │── data/
@@ -159,13 +159,13 @@ Neural Networks performed very well after tuning but required more compute and c
 
 ---
 
-## 🚀 **How to Run the Project**
+## **How to Run the Project**
 
 ### **1. Clone the repository**
 
 ```bash
-git clone https://github.com/yourusername/forest-cover-prediction.git
-cd forest-cover-prediction
+git https://github.com/affan810/AIT511_Part-2.git
+cd AIT511_Part-2
 ```
 
 ### **2. Install dependencies**
@@ -183,7 +183,7 @@ jupyter notebook
 Open:
 
 ```
-notebooks/forest_cover_prediction.ipynb
+main.ipynb
 ```
 
 ---
