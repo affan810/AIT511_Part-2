@@ -1,149 +1,203 @@
-This is a projecct for Machine learning course 
-below is the checklist of the things needed to be done 
+---
 
-Here is your comprehensive Master's-level execution plan for the Kaggle "Forest Cover Type" project. This response consolidates the execution roadmap with a specific **Unified Framework** to compare the disparate models (Regression vs. Classification vs. Clustering) as required by your assignment.
+# 🌲 Forest Cover Type Prediction (Multiclass Classification)
 
-### **The Architectural Flow**
+Predicting forest cover type based on environmental and geographical features using **Machine Learning** and **Deep Learning** techniques.
+This project applies multiple models, compares their performance, and identifies the best approach for structured ecological tabular data.
 
-To satisfy the requirement of comparing *all* models, you cannot simply run them in isolation. You must build a pipeline that normalizes their outputs into a single format: **Class Labels (1-7)**.
+---
 
------
+## 📘 **Project Overview**
 
-### **Phase 1: Data Ingestion & "Smart" EDA**
+Forests are influenced by elevation, soil composition, hydrology, sunlight, and terrain characteristics.
+This project uses the **UCI Forest CoverType dataset** to classify land areas into one of **7 forest cover types**.
 
-**Goal:** Prove you understand the domain (Cartography) and the data's limitations.
+The aim is to:
 
-**1. Load & Sanity Check**
+* Understand environmental feature interactions
+* Train various ML models
+* Tune selected models
+* Compare performance using a consistent evaluation pipeline
+* Identify the best algorithm for ecological prediction tasks
 
-  * **Syntax:** `df = pd.read_csv(...)`
-  * **Critical Check:** Verify negative values in `Vertical_Dist_Hydrology`. *Do not drop them; they indicate water is below the measuring point.*
+---
 
-**2. Strategic Visualization (The "Comprehensive EDA")**
+## 📦 **Dataset Information**
 
-  * **Class Imbalance:**
-      * *Action:* Plot `sns.countplot(x='Cover_Type')`.
-      * *Insight:* You will see Classes 1 & 2 dominate (\>85%), while Class 4 is rare (\<0.5%). This justifies your need for **Stratified K-Fold**.
-  * **Feature Interaction:**
-      * *Action:* `sns.heatmap(df.corr())`. Focus on `Elevation` vs. `Cover_Type`.
-  * **Soil Type Analysis:**
-      * *Action:* Confirm one-hot integrity. `df.iloc[:, 14:54].sum(axis=1).value_counts()` (Should all be 1).
+**Source:** UCI Machine Learning Repository
+**Samples:** 581,012
+**Features:** 54
 
------
+* **10 continuous geographical features**
+* **44 one-hot encoded categorical features** (soil type & wilderness area)
 
-### **Phase 2: Preprocessing & Feature Engineering**
+**Target Variable:** `Cover_Type` (1–7)
+Represents tree species such as Spruce/Fir, Aspen, Douglas-fir, etc.
 
-**Goal:** Prepare `X` and `y` for models with different mathematical needs.
+---
 
-**1. Feature Engineering (Domain Knowledge)**
+## 🧹 **Preprocessing Steps**
 
-  * **Euclidean Distance:** Create a new feature combining horizontal and vertical distance to water.
-      * `df['Hydro_Euclidean'] = np.sqrt(df['Horizontal_Dist_Hydrology']**2 + df['Vertical_Dist_Hydrology']**2)`
-  * **Soil Type Compression (Optional but recommended for Trees):**
-      * Reverse One-Hot encoding into a single categorical column for Tree models to reduce sparsity.
+* Exploratory Data Analysis (EDA)
+* Created engineered feature: **Hydro_Euclidean distance**
+* Standardization applied only to models that required it (KNN, SVM, MLP)
+* Train/test split: **80/20**, stratified
+* No missing values in dataset
 
-**2. The Split (Mandatory)**
+---
 
-  * **Stratified Split:** You *must* use `stratify=y` to ensure Class 4 is present in both train and test sets.
-      * `train_test_split(X, y, stratify=y, test_size=0.2)`
+## 🔎 **Exploratory Data Analysis (EDA)**
 
-**3. Scaling (Conditional)**
+Key plots generated:
 
-  * Create two versions of your data:
-      * `X_scaled`: Standardized (Mean=0, Std=1). **Required for:** KNN, SVM, Neural Networks, Linear Regression, GMM, K-Means.
-      * `X_raw`: Original values. **Preferred for:** Decision Trees, Random Forest, XGBoost (they handle raw data better).
+* Cover type distribution
+* Elevation histogram
+* Elevation vs. Cover Type boxplot
+* Correlation heatmap for geographical features
 
------
+These visualizations helped understand data shape, class balance, and relationships.
 
-### **Phase 3: The Unified Comparison Framework**
+---
 
-**Goal:** Compare "Apples to Oranges" by forcing all models to output discrete classes.
+## 🤖 **Models Implemented**
 
-Create a results table:
-`results = pd.DataFrame(columns=['Model', 'Accuracy', 'Weighted_F1', 'Time_Sec'])`
+### **Baseline Models**
 
-#### **Group A: Regression Models (Linear, Ridge, LASSO, Polynomial)**
+* Logistic Regression
+* Linear SVM
+* K-Nearest Neighbors (KNN)
+* Decision Tree
+* Random Forest
+* HistGradientBoosting
+* Neural Network (MLP)
 
-*These output continuous numbers, not classes.*
+### **Tuned Models**
 
-  * **Strategy:** Round & Clip.
-  * **Implementation:**
-    1.  Fit Regressor on `X_scaled`.
-    2.  Predict `y_pred_continuous`.
-    3.  **Adapt:** `y_pred_class = np.clip(np.round(y_pred_continuous), 1, 7).astype(int)`
-  * **Why?** This allows you to calculate Accuracy/F1 even for a Linear Regression model. It will likely perform poorly, but it fulfills the assignment.
+* Random Forest (RandomizedSearchCV)
+* Neural Network (optimized architecture)
+* HistGradientBoosting (learning rate tuning)
 
-#### **Group B: Probabilistic & Generative Models (GMM, Naive Bayes)**
+---
 
-  * **Naive Bayes:** Works natively. Use `GaussianNB`.
-  * **Gaussian Mixture Models (GMM):**
-      * **Strategy:** MLE Classification.
-      * **Implementation:** Fit **7 separate GMMs** (one per class).
-      * **Prediction:** For each test point, calculate the `score_samples` (log-likelihood) from all 7 models. Assign the class of the model with the highest likelihood.
+## 📊 **Results Summary**
 
-#### **Group C: Clustering Models (K-Means, DBSCAN, Hierarchical)**
+| Model                        | Accuracy   |
+| ---------------------------- | ---------- |
+| **Random Forest (tuned)**    | **95.52%** |
+| Random Forest (baseline)     | 95.47%     |
+| Decision Tree                | 93.84%     |
+| Neural Network (tuned)       | 93.75%     |
+| Neural Network (baseline)    | 87.16%     |
+| KNN                          | 86.48%     |
+| HistGradientBoosting (tuned) | 87.13%     |
+| Logistic Regression          | 71.92%     |
+| Linear SVM                   | 71.14%     |
 
-*These are unsupervised.*
+**Best Model:**
+✔ **Random Forest (tuned)** – highest accuracy, stable behavior, and interpretable feature relationships.
 
-  * **Strategy:** Feature Extraction or Cluster Purity.
-  * **Option 1 (Easier):** Use Clustering as a feature. Add `Cluster_ID` as a column to `X` and retrain a simple Logistic Regression.
-  * **Option 2 (Direct):** Map clusters to labels.
-    1.  Fit K-Means (k=7).
-    2.  For each cluster, find the "majority class" from the training labels.
-    3.  Assign that majority class to all test points in that cluster.
+---
 
-#### **Group D: Deep Learning (NN, CNN, Transformers)**
+## 🔬 **Why Random Forest Performed Best**
 
-  * **Neural Networks (MLP):** Standard Dense layers with `softmax` output (7 units).
-  * **CNNs for Tabular:**
-      * **Strategy:** Reshape input.
-      * **Implementation:** Reshape `(batch, 55)` -\> `(batch, 55, 1)`. Use `Conv1D` layers.
-  * **Transformers:**
-      * **Strategy:** Self-Attention on features.
-      * **Implementation:** Use `MultiHeadAttention` layer treating features as the sequence.
+* Handles **non-linear feature interactions**
+* Works well with **mixed numerical + categorical (one-hot) features**
+* Reduces overfitting using ensembling
+* Excels in high-dimensional tabular datasets
 
------
+Neural Networks performed very well after tuning but required more compute and careful hyperparameter control.
 
-### **Phase 4: Evaluation & Reporting**
+---
 
-**1. The "Master" Evaluation Function**
-Write one function to rule them all.
+## 🖼️ **Important Visualizations**
 
-```python
-def evaluate_model(model, name, X_test, y_test):
-    start = time.time()
-    y_pred = model.predict(X_test)
-    
-    # ADAPTER: Handle Regression Outputs
-    if name in ['LinearReg', 'Ridge', 'Lasso']:
-        y_pred = np.clip(np.round(y_pred), 1, 7).astype(int)
-        
-    # ADAPTER: Handle Neural Network Probabilities
-    if name in ['MLP', 'CNN']:
-        y_pred = np.argmax(y_pred, axis=1) + 1
+![](target_distribution.png)
+*Distribution of Forest Cover Types*
 
-    f1 = f1_score(y_test, y_pred, average='weighted') # Weighted handles imbalance
-    acc = accuracy_score(y_test, y_pred)
-    
-    return {'Model': name, 'Accuracy': acc, 'Weighted_F1': f1}
+![](elevation_histogram.png)
+*Elevation Histogram*
+
+![](correlation_heatmap.png)
+*Correlation Heatmap of Continuous Features*
+
+![](model_accuracy_comparison.png)
+*Model Accuracy Comparison*
+
+![](rf_confusion_matrix.png)
+*Confusion Matrix — Tuned Random Forest*
+
+---
+
+## 🏗️ **Project Structure**
+
+```
+│── data/
+│   └── covtype.csv
+│
+│── notebooks/
+│   └── forest_cover_prediction.ipynb
+│
+│── images/
+│   ├── target_distribution.png
+│   ├── elevation_histogram.png
+│   ├── elevation_vs_cover_type.png
+│   ├── correlation_heatmap.png
+│   ├── model_accuracy_comparison.png
+│   ├── rf_confusion_matrix.png
+│   ├── mlp_confusion_matrix.png
+│   └── dt_confusion_matrix.png
+│
+│── src/
+│   ├── preprocess.py
+│   ├── models.py
+│   ├── evaluation.py
+│
+│── README.md
+│── requirements.txt
+│── report.pdf
 ```
 
-**2. Key Insights for the Report**
+---
 
-  * **The Winner:** It will almost certainly be **Random Forest** or **XGBoost/Gradient Boosting**. Explain *why*: Trees handle the binary/categorical nature of "Soil Type" natively and capture non-linear interactions better than SVMs.
-  * **The Loser:** **Linear Regression** and **K-Means**. Linear models cannot capture the complex topography; K-Means assumes spherical clusters which cartographic data rarely forms.
-  * **The Surprise:** **GMM** might perform decently if the classes have distinct Gaussian distributions, but likely worse than Trees.
-  * **Deep Learning Note:** Mention that NNs often *underperform* Trees on tabular data unless heavily tuned (TabNet), which explains your results if the MLP is mediocre.
+## 🚀 **How to Run the Project**
 
-**3. Visual Deliverables**
+### **1. Clone the repository**
 
-  * **Bar Chart:** Model Name vs. Weighted F1 Score.
-  * **Confusion Matrix:** Only for the *best* model (likely Random Forest) to show which classes get confused (usually Class 1 vs Class 2).
+```bash
+git clone https://github.com/yourusername/forest-cover-prediction.git
+cd forest-cover-prediction
+```
 
-### **Summary of Next Steps**
+### **2. Install dependencies**
 
-1.  **Code the Data Loader:** Handle the `Vertical_Dist` and Class 4 imbalance checks first.
-2.  **Code the Adapter Logic:** Ensure your regression models output integers 1-7.
-3.  **Run the Tree Models:** Get your "Gold Standard" baseline.
-4.  **Run the Deep Learning Models:** Set up a simple Keras/PyTorch loop.
+```bash
+pip install -r requirements.txt
+```
 
-Would you like me to generate the **Python code for the GMM Classifier Wrapper** specifically? That is the most complex custom logic you'll need to write.
+### **3. Run the Jupyter Notebook**
+
+```bash
+jupyter notebook
+```
+
+Open:
+
+```
+notebooks/forest_cover_prediction.ipynb
+```
+
+---
+
+## 🧩 **Future Improvements**
+
+* Add XGBoost, CatBoost, LightGBM
+* Apply SMOTE or class-weight adjustments for imbalance
+* Use stacking or ensemble blending
+* Incorporate GPS, climate, and temporal data
+* Deploy as API or web app using Flask / FastAPI
+* Add SHAP analysis for explainability
+
+---
+
+## 📜 **Author**
+* **Affan Shaikh (MT2025016)**

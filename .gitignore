@@ -1,0 +1,9 @@
+# Mac System Files (Annoying junk files created by macOS)
+.DS_Store
+
+# Python Compiled Files (Auto-generated, not actual code)
+__pycache__/
+*.pyc
+
+# Jupyter Notebook Checkpoints (Auto-generated backups)
+.ipynb_checkpoints
