@@ -1,9 +1,11 @@
 ---
 
-# 🌲 Forest Cover Type Prediction (Multiclass Classification)
+# Forest Cover Type Prediction (Multiclass Classification)
 
 Predicting forest cover type based on environmental and geographical features using **Machine Learning** and **Deep Learning** techniques.
 This project applies multiple models, compares their performance, and identifies the best approach for structured ecological tabular data.
+
+Link to the dataset https://www.kaggle.com/datasets/uciml/forest-cover-type-dataset/data
 
 ---
 
@@ -188,7 +190,7 @@ main.ipynb
 
 ---
 
-## 🧩 **Future Improvements**
+## **Future Improvements**
 
 * Add XGBoost, CatBoost, LightGBM
 * Apply SMOTE or class-weight adjustments for imbalance
@@ -199,5 +201,5 @@ main.ipynb
 
 ---
 
-## 📜 **Author**
+## **Author**
 * **Affan Shaikh (MT2025016)**
